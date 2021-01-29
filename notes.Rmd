@@ -1,0 +1,241 @@
+---
+title: "Notes - intermediate SQL server"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Chapter 1 -- Summarizing Data
+
+#### Data Exploration with Economics
+
+MIN()
+MAX()
+AVG()
+
+<!-- WHERE State <> "NY" -->
+
+<!-- GROUP BY State -->
+
+<!-- HAVING Count(CustomerID) >10 -->
+
+<!-- ORDER BY Count(CustomerID) DESC -->
+
+Having is the WHERE for Aggregations
+
+#### Dealing and Resolving missing data
+
+NULL, IS NULL, IS NOT NULL
+
+WHERE IS NULL
+
+BLANK is not NULL
+
+use where LEN(GDP) > 0, ISNULL
+
+ISNULL(column1, column2)
+
+COALESCE(column1, column2, 'N/A')
+
+#### Changing column values with CASE
+
+CASE WHEN THEN [ELSE] END, [] means optional
+
+or
+
+
+### Chapter 2 - Math functions
+
+#### Counting and totals
+
+SELECT COUNT(*) FROM Incidents
+DISTINCT
+
+GROUP BY
+ORDER BY
+DESC
+
+#### Math with Dates
+
+DATEPART, DD, MM, YY, HH
+
+DATEADD(DATEPART, number, date)
+
+what date is 30 days from June 21, 2020?
+
+DATEDIFF(DD, '2020-05-22', '2020-06-21')
+
+can use FORMAT(getdate(), 'dd-MM-yy') function to transform dates
+
+
+#### Rounding and Truncating numbers
+Rounding numbers in T-SQL, ROUND(number, length [,function])
+
+Rounding numbers in T-SQL
+
+ROUND(,0)
+ROUND(,1)
+
+Rounding on the left side of the decimal, use negative numbers
+
+TRUNCATING : ROUND(,0,1), the third argument here corresponds to the operation
+
+#### More math functions
+ABS()
+SQRT()
+SQUARE()
+
+LOG(number [,Base])
+
+LOG(0, 10) will give you an error
+
+### Processing Data in SQL Server
+
+#### While loops
+
+define variables, 
+VARCHAR(n): variable length text field
+INT:
+DECIMAL(p,s): p, number of decimals to be stored to the left of the decimal point; s, number of decimals to be stored to the right of the decimal point
+
+NUMERIC(p,s):
+
+DECLARE @Snack VARCHAR(10)
+SET @Snack - 'Cookies'
+SELECT @Snack
+
+While loops in T-SQL
+
+DECLARE @ctr INT
+
+SET @ctr = 1
+
+WHILE @ctr < 10
+  BEGIN 
+    SET @ctr = @ctr + 1
+    IF @ctr = 4
+      BREAK
+  END
+
+SELECT @ctr
+
+
+DECLARE @counter INT
+SET @counter = 20
+
+-- Create a loop
+WHILE @counter < 30
+
+-- Loop code starting point
+BEGIN
+	SELECT @counter = @counter + 1
+-- Loop finish
+END
+
+-- Check the value of the variable
+SELECT @counter
+
+
+#### Derived table
+
+break down complex queries into small pieces
+
+#### Common Table expressions (CTE)
+
+WITH CTEName(Col1, Col2) AS (
+
+SELECT
+FROM
+
+)
+
+
+### Chapter 4 - Window function
+
+Window syntax in T-SQL
+
+OVER (PARTITION BY SalesYear ORDER BY ) AS
+
+COUNT(CurrentQuota) OVER ()
+
+<!-- SELECT OrderID, TerritoryName,  -->
+<!--        -- Total price for each partition -->
+<!--        SUM(OrderPrice) -->
+<!--        -- Create the window and partitions -->
+<!--        OVER(PARTITION BY TerritoryName) AS TotalPrice -->
+<!-- FROM Orders -->
+
+
+#### Common window functions
+
+FIRST_VALUE() OVER (PARTITION BY ORDER BY )
+LAST_VALUE()
+
+
+query adjacent rows
+LEAD(), last value will always be null for LEAD()
+use ORDER BY to determine
+
+LAG(), first value will always be zero
+
+
+<!-- SELECT TerritoryName, OrderDate,  -->
+<!--        -- Specify the previous OrderDate in the window -->
+<!--        LAG(OrderDate)  -->
+<!--        -- Over the window, partition by territory & order by order date -->
+<!--        OVER(PARTITION BY TerritoryName ORDER BY OrderDate) AS PreviousOrder, -->
+<!--        -- Specify the next OrderDate in the window -->
+<!--        LEAD(OrderDate)  -->
+<!--        -- Create the partitions and arrange the rows -->
+<!--        OVER(PARTITION BY TerritoryName ORDER BY OrderDate) AS NextOrder -->
+<!-- FROM Orders -->
+
+#### Increasing window complexity
+
+creating a running total with ORDER BY
+SUM() OVER (PARTITION BY ORDER BY)
+
+ROW_NUMBER(), requires order by
+
+<!-- SELECT TerritoryName, OrderDate,  -->
+<!--        -- Assign a row number -->
+<!--        ROW_NUMBER() -->
+<!--        -- Create the partitions and arrange the rows -->
+<!--        OVER(PARTITION BY TerritoryName ORDER BY OrderDate) AS OrderCount -->
+<!-- FROM Orders -->
+
+
+#### Using window function for statistical functions
+
+Calculating stdev for all
+STDEV() OVER() AS StandardDev
+
+Calcuating stdev for each partition
+OVER(PARTITION BY ORDER BY)
+
+
+Calculating the mode, CTE, row number, sub query
+
+<!-- https://learn.datacamp.com/courses/intermediate-t-sql -->
+
+<!-- ## R Markdown -->
+
+<!-- This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. -->
+
+<!-- When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this: -->
+
+<!-- ```{r cars} -->
+<!-- summary(cars) -->
+<!-- ``` -->
+
+<!-- ## Including Plots -->
+
+<!-- You can also embed plots, for example: -->
+
+<!-- ```{r pressure, echo=FALSE} -->
+<!-- plot(pressure) -->
+<!-- ``` -->
+
+<!-- Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. -->
